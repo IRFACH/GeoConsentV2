@@ -24,6 +24,7 @@ Time     : {time}
 Latitude : {lat}
 Longitude: {lon}
 Accuracy : {acc} meters
+Speed    : {speed} m/s
 Map      : {map_link}
 -----------------------
 """

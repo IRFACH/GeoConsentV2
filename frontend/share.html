@@ -18,28 +18,53 @@ Allow & Share Location
 <p id="status"></p>
 
 <script>
-function shareLocation() {
-  document.getElementById("status").innerText = "Requesting location...";
+let watchID = null;
 
-  navigator.geolocation.getCurrentPosition(
+function shareLocation() {
+  if (!navigator.geolocation) {
+    alert("Geolocation not supported");
+    return;
+  }
+
+  document.getElementById("status").innerText = "Starting live tracking...";
+
+  // Start watching location
+  watchID = navigator.geolocation.watchPosition(
     pos => {
       fetch("/location", {
         method: "POST",
-        headers: {"Content-Type":"application/json"},
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
           lat: pos.coords.latitude,
           lon: pos.coords.longitude,
-          accuracy: pos.coords.accuracy
+          accuracy: pos.coords.accuracy,
+          speed: pos.coords.speed || 0
         })
       }).then(() => {
         document.getElementById("status").innerText =
-          "✅ Location shared successfully";
+          `Live tracking active: Lat ${pos.coords.latitude}, Lon ${pos.coords.longitude}`;
       });
     },
-    err => alert("Location permission denied")
+    err => alert("Location permission denied"),
+    {
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      timeout: 5000
+    }
   );
+}
+
+// Optional: Stop tracking
+function stopTracking() {
+  if (watchID !== null) {
+    navigator.geolocation.clearWatch(watchID);
+    document.getElementById("status").innerText = "Tracking stopped";
+  }
 }
 </script>
 
+<button onclick="stopTracking()" style="padding:12px 20px;margin-top:10px">
+Stop Tracking
+</button>
 </body>
 </html>	

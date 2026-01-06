@@ -1,4 +1,5 @@
-# 🌍 GeoConsent (still under Development) 
+# 🌍 GeoConsentV2 (still under Development)
+Added Live Traking 
 
 A **consent-based location verification tool** designed for Termux users.  
 GeoConsent allows you to generate a secure link that lets another user **voluntarily share their GPS location** via browser permission.

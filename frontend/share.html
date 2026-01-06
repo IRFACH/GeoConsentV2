@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GeoConsent – Share Location</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body style="font-family:sans-serif;text-align:center;padding:40px">
+
+<h2>📍 Location Verification</h2>
+<p>
+By clicking the button below, you consent to share your current GPS location.
+</p>
+
+<button onclick="shareLocation()" style="padding:12px 20px;font-size:16px">
+Allow & Share Location
+</button>
+
+<p id="status"></p>
+
+<script>
+function shareLocation() {
+  document.getElementById("status").innerText = "Requesting location...";
+
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      fetch("/location", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({
+          lat: pos.coords.latitude,
+          lon: pos.coords.longitude,
+          accuracy: pos.coords.accuracy
+        })
+      }).then(() => {
+        document.getElementById("status").innerText =
+          "✅ Location shared successfully";
+      });
+    },
+    err => alert("Location permission denied")
+  );
+}
+</script>
+
+</body>
+</html>	
